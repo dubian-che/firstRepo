@@ -1,0 +1,63 @@
+<DevType>master</DevType>
+
+<DeviceWANComm>    
+        <DevId>1000</DevId>
+        <DevName>WANComm</DevName>
+        <LocalIP>10.10.0.196</LocalIP>
+        <LocalPort>5000</LocalPort>
+        <RemoteIP>10.10.0.219</RemoteIP>
+        <RemotePort>8000</RemotePort>
+</DeviceWANComm>                 
+                                 
+<DeviceRAW>                      
+   <DevId>2000</DevId>
+   <Name>Serial-Master</Name>
+   <DevName>eth1</DevName>
+   <Type> IP </Type>    
+   <Layer> L2  </Layer>          
+   <Proto>    ETH_P_ALL   </Proto>
+</DeviceRAW>                     
+                                 
+                                 
+                                 
+<DeviceSerial>      
+   <!-- generic -->
+   <DevId>3000</DevId>
+   <Name>Serial-0</Name>
+   <DevName>/dev/ttyACM0</DevName>
+   <Type> Point2Point </Type>
+   <BaudRate>115200   </BaudRate>
+   <!-- /generic -->
+</DeviceSerial>
+ 
+<DeviceUISendComm>
+        <DevId>4000</DevId>
+        <DevName>UIComm</DevName> 
+        <LocalIP>192.168.254.253</LocalIP>
+        <LocalPort>1025</LocalPort>
+        <RemoteIP>192.168.254.10</RemoteIP>
+        <RemotePort>32771</RemotePort>
+</DeviceUISendComm>
+                   
+<DeviceUIRecvComm>
+        <DevId>4010</DevId>
+        <DevName>UIRecvComm</DevName>
+        <LocalIP>192.168.254.253</LocalIP>
+        <LocalPort>1024</LocalPort>
+        <RemoteIP>192.168.254.10</RemoteIP>
+        <RemotePort>32771</RemotePort>
+                   
+</DeviceUIRecvComm>
+ 
+<DeviceMSTun>
+        <DevId>5000</DevId> 
+     <DevName>MSTun</DevName>
+   <Type> Point2Point </Type> 
+   <LocalTunIP>192.168.8.8</LocalTunIP>    
+   <DestTunIP>192.168.8.9</DestTunIP>    
+   <MASK>255.255.255.0</MASK>           
+   <MTU>  1400       </MTU> 
+   <Bandwidth>  10000 </Bandwidth>
+</DeviceMSTun>                
+
+
