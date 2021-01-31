@@ -31,7 +31,14 @@ git clone <repo> <directory>
 
 ## config
 
-显示当前的 git 配置信息：
+git 配置信息
+
+```shel
+git config --global user.name "Luke.Deng"
+git config --global user.email  "xiangshuo1992@gmail.com"
+```
+
+
 
 ## 分支
 
