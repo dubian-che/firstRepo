@@ -38,6 +38,12 @@ git config --global user.name "Luke.Deng"
 git config --global user.email  "xiangshuo1992@gmail.com"
 ```
 
+## 暂存区替换工作区
+
+```shell
+git checkout .
+```
+
 
 
 ## 分支

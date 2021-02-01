@@ -165,7 +165,7 @@ int execvp(const char *file, char *const argv[]);
 int execvpe(const char *file, char *const argv[], char *const envp[]);
 ```
 
-### execlp函数
+#### execlp函数*
 
 ```c++
 //加载一个进程，借助PATH环境变量
@@ -201,7 +201,7 @@ int main()
 }
 ```
 
-### execl函数
+#### execl函数*
 
 ```c++
 //加载一个进程，通过路径+程序名来加载
@@ -212,7 +212,7 @@ execlp("ls", "ls", "-l", "-F", NULL);		//使用程序名在PATH中搜索
 execl("/bin/ls", "ls", "-l", "-F", NULL);	//使用参数1给出的路径搜索
 ```
 
-### execle函数?
+#### execle函数?
 
 ```c++
 int execle(const char *path, const char *arg, ..., char *const envp[]);
@@ -220,13 +220,7 @@ int execle(const char *path, const char *arg, ..., char *const envp[]);
 
 例：
 
-```c++
-
-```
-
-
-
-### execv函数
+#### execv函数
 
 ```c++
 int execv(const char *path, char *const argv[]);
@@ -239,7 +233,7 @@ char * argv[] = {(char *)"ls", (char *)"-l", (char *)"-a", (char *)"-h", (char *
 execv("/bin/ls", argv);
 ```
 
-### execvp函数
+#### execvp函数
 
 ```c++
 //加载一个进程，使用自定义环境变量env
@@ -253,7 +247,7 @@ char * argv[] = {(char *)"ls", (char *)"-l", (char *)"-a", (char *)"-h", (char *
 execvp("ls", argv);
 ```
 
-### execvpe函数？
+#### execvpe函数？
 
 ```c++
 int execvpe(const char *file, char *const argv[], char *const envp[]);
@@ -264,6 +258,62 @@ int execvpe(const char *file, char *const argv[], char *const envp[]);
 ```c++
 
 ```
+
+## 3.进程回收
+
+### 1.孤儿进程
+
+```c++
+父进程结束，子进程被称为孤儿进程，孤儿被init领养，init进程变为孤儿进程的父亲
+为了释放子进程所占用的系统资源
+//进程结束后，能够释放用户区空间
+//释放不了pcb，必须由父进程释放
+```
+
+### 2.僵尸进程
+
+```c++
+子进程结束，父进程不释放子进程的pcb，该子进程被称为僵尸进程
+僵尸进程不是一个活着的进程
+```
+
+### 3.进程回收
+
+#### （1）wait 阻塞函数
+
+```c++
+#include <sys/types.h>  
+#include <sys/wait.h>
+pid_t wait (int * status);
+/*函数说明：wait()会暂时停止目前进程的执行, 直到有信号来到或子进程结束. 如果在调用wait()时子进程已经结束, 则wait()会立即返回子进程结束状态值. 子进程的结束状态值会由参数status 返回, 而子进程的进程识别码也会一快返回. 如果不在意结束状态值, 则参数 status 可以设成NULL.*/
+//被调用一次只能回收一个子进程
+//返回值：
+如果执行成功则返回子进程识别码(PID), 如果有错误发生则返回-1. 失败原因存于errno 中.
+//参数status:
+进程一旦调用了wait，就立即阻塞自己，由wait自动分析是否当前进程的某个子进程已经退出。如果让它找到了这样一个已经变成僵尸的子进程，wait就会收集这个子进程的信息，并把它彻底销毁后返回；如果没有找到这样一个子进程，wait就会一直阻塞在这里，直到有一个出现为止。
+
+参数status用来保存被收集进程退出时的一些状态，它是一个指向int类型的指针。但如果我们对这个子进程是如何死掉的毫不在意，只想把这个僵尸进程消灭掉，（事实上绝大多数情况下，我们都会这样想），我们就可以设定这个参数为NULL，就象下面这样：
+pid = wait(NULL); 
+如果成功，wait会返回被收集的子进程的进程ID，如果调用进程没有子进程，调用就会失败，此时wait返回-1，同时errno被置为ECHILD。
+
+WIFEXITED(status) 这个宏用来指出子进程是否为正常退出的，如果是，它会返回一个非零值。
+
+WEXITSTATUS(status) 当WIFEXITED返回非零值时，我们可以用这个宏来提取子进程的返回值，如果子进程调用exit(5)退出，WEXITSTATUS(status)就会返回5；如果子进程调用exit(7)，WEXITSTATUS(status)就会返回7。请注意，如果进程不是正常退出的，也就是说，WIFEXITED返回0，这个值就毫无意义
+
+WIFSIGNALED(status):非0时说明进程异常终止
+若上宏为真，此时可通过
+    WTERMSIG(status)
+获取使得进程退出的信号编号
+    
+if(WIFSIGNALED(status))
+{
+    printf("使得进程终止的信号编号： %d\n",WTERMSIG(status));   
+}
+```
+
+#### （2）waitpid
+
+
 
 
 
